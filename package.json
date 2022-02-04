@@ -3,7 +3,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
-    "lint": "eslint --ignore-path .eslintignore --ext .js,.ts ."
+    "lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
+    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
   },
   "name": "rae-bot",
   "version": "1.0.0",
