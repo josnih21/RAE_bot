@@ -2,7 +2,8 @@
   "main": "dist/app.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/app.js"
+    "start": "node dist/app.js",
+    "lint": "eslint --ignore-path .eslintignore --ext .js,.ts ."
   },
   "name": "rae-bot",
   "version": "1.0.0",
