@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { Context, Telegraf } from "telegraf";
 import { Update } from "typegram";
 import { Definition, RAE } from "rae-api";

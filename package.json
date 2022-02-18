@@ -21,6 +21,7 @@
 	},
 	"dependencies": {
 		"conventional-changelog": "^3.1.25",
+		"dotenv": "^16.0.0",
 		"rae-api": "^1.2.4-a",
 		"telegraf": "^4.6.0"
 	}
