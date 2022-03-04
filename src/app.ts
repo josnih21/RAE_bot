@@ -19,9 +19,14 @@ const showDefinitions = (context: any) =>
 	rae.searchWord(context.message.text)
 		.then((response) => rae.fetchWord(response.getRes()[0].getId()))
 		.then((result) => result.getDefinitions())
-		.then((definitions) => definitions.map((value) => context.reply(value.getDefinition())))
-		.catch((error) => context.reply(errorMessage(context.message.text)));
+		.then((definitions) => context.reply(manageDefinitionFormat(definitions)))
+		.catch(() => context.reply(errorMessage(context.message.text)));
 
+const manageDefinitionFormat = (definitions: Definition[]) => {
+	return definitions.map(definition =>
+		"📚 " + definition.getType().concat(" ").concat(definition.getDefinition())
+	).reduce((acc, formattedDefinition) => acc.concat("\n").concat(formattedDefinition))
+}
 bot.on("text", showDefinitions);
 bot.launch();
 
