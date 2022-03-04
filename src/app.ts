@@ -8,26 +8,20 @@ const bot: Telegraf<Context<Update>> = new Telegraf(
 );
 
 const rae = new RAE();
-type DefinitionFunction = (definitions: Definition[]) => void;
-const handleWordSearch2 = (word: string) => {
-	return new Promise((resolve: DefinitionFunction, reject) => {
-		rae.searchWord(word)
-			.then((response) => rae.fetchWord(response.getRes()[0].getId()))
-			.then((result) => result.getDefinitions()) //TODO: rename
-			.then(resolve)
-			.catch(reject);
-	});
-};
 
 bot.start((context) => context.reply("Bienvenido " + context.from.first_name));
 bot.help((context) => {
 	context.reply("Escribe una palabra para obtener su definición");
 });
 
+const errorMessage = (word: String) => `No he encontrado una definición para ${word}`
 const showDefinitions = (context: any) =>
-	handleWordSearch2(context.message.text).then((definitions) =>
-		definitions.map((value) => context.reply(value.getDefinition()))
-	);
+	rae.searchWord(context.message.text)
+		.then((response) => rae.fetchWord(response.getRes()[0].getId()))
+		.then((result) => result.getDefinitions())
+		.then((definitions) => definitions.map((value) => context.reply(value.getDefinition())))
+		.catch((error) => context.reply(errorMessage(context.message.text)));
+
 bot.on("text", showDefinitions);
 bot.launch();
 
