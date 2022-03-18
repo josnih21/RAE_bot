@@ -1,9 +1,10 @@
-import { RAE } from "rae-api";
-import { DefinitionEntity } from "./definition-entity";
-import { NotDefinitionFoundError } from "./errors";
+import {RAE} from "rae-api";
+import {DefinitionEntity} from "./definition-entity";
+import {NotDefinitionFoundError} from "./errors";
 
 export interface DefinitionService {
-	findDefinitionsFor(word: string): Promise<DefinitionEntity[]>;
+	findDefinitionsFor(word: string): Promise<DefinitionEntity[]>
+	getFirstMatchingWord(word: string): Promise<String>
 }
 
 export class RaeApiDefinitionService implements DefinitionService {
@@ -11,6 +12,10 @@ export class RaeApiDefinitionService implements DefinitionService {
 
 	constructor(raeApi: RAE) {
 		this.raeApi = raeApi;
+	}
+
+	getFirstMatchingWord(word: string) {
+		return this.raeApi.searchWord(word).then((matchingWords) => matchingWords.getRes()[0].getHeader())
 	}
 
 	findDefinitionsFor(word: string) {
