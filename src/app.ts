@@ -3,8 +3,8 @@ import {Context, Telegraf} from "telegraf";
 import {Update} from "typegram";
 import {RAE} from "rae-api";
 import {DefinitionService, RaeApiDefinitionService} from "./rae_service";
-import {Definition} from "./Definition";
 import {errorMessage} from "./errors";
+import {manageDefinitionFormat} from "./DefinitionsFormatter";
 
 const bot: Telegraf<Context<Update>> = new Telegraf(
 	process.env.BOT_TOKEN as string
@@ -23,11 +23,6 @@ const showDefinitions = (context: any) => {
 	raeService.findDefinitionsFor(chatMessage)
 		.then((definitions) => context.reply(manageDefinitionFormat(definitions), {parse_mode: "HTML"}))
 		.catch(() => context.reply(errorMessage(chatMessage)));
-}
-const manageDefinitionFormat = (definitions: Definition[]) => {
-	return definitions.map(definition =>
-		"📚 <i>" + definition.getType().concat("</i>  <b>").concat(definition.getDefinition()).concat("</b>")
-	).reduce((acc, formattedDefinition) => acc.concat("\n").concat(formattedDefinition))
 }
 bot.on("text", showDefinitions);
 bot.launch();
