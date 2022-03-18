@@ -1,11 +1,11 @@
 import {RAE} from "rae-api";
-import {Definition} from "./Definition";
+import {DefinitionEntity} from "./DefinitionEntity";
 
-export interface DefinitionService{
-	findDefinitionsFor(word: string): Promise<Definition[]>
-} //TODO: Check this
+export interface DefinitionService {
+	findDefinitionsFor(word: string): Promise<DefinitionEntity[]>
+}
 
-export class RaeApiDefinitionService implements DefinitionService{
+export class RaeApiDefinitionService implements DefinitionService {
 	raeApi: RAE
 
 	constructor(raeApi: RAE) {
@@ -14,9 +14,12 @@ export class RaeApiDefinitionService implements DefinitionService{
 
 	findDefinitionsFor(word: string) {
 		return this.raeApi.searchWord(word)
-			.then((response) => this.raeApi.fetchWord(response.getRes()[0].getId()))
-			.then((result) => result.getDefinitions())
-			.then((result) => result.map((value) => Definition.from(value)))
+			.then((matchingWords) => {
+				let wordId = matchingWords.getRes()[0].getId();
+				return this.raeApi.fetchWord(wordId)
+			})
+			.then((response) => response.getDefinitions())
+			.then((wordDefinitions) => wordDefinitions.map((value) => DefinitionEntity.from(value)))
 			.catch((error) => {
 				throw error
 			})

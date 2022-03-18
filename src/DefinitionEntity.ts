@@ -1,6 +1,6 @@
 import {Definition as RaeApiDefinition} from "rae-api" ;
 
-export class Definition {
+export class DefinitionEntity {
 	readonly type: string
 	readonly definition: string
 
@@ -10,7 +10,7 @@ export class Definition {
 	}
 
 	static from(definition: RaeApiDefinition) {
-		return new Definition(definition.getType(), definition.getDefinition())
+		return new DefinitionEntity(definition.getType(), definition.getDefinition())
 	}
 
 	getType() {
