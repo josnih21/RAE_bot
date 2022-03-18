@@ -2,16 +2,11 @@ import "dotenv/config";
 import { Context, Telegraf } from "telegraf";
 import { Update } from "typegram";
 import { RAE } from "rae-api";
-import {
-	DefinitionService,
-	RaeApiDefinitionService,
-} from "./definition-service";
-import { errorMessage } from "./errors";
+import { DefinitionService, RaeApiDefinitionService } from "./definition-service";
 import { manageDefinitionFormat } from "./definitions-formatter";
+import {NotDefinitionFoundError} from "./errors";
 
-const bot: Telegraf<Context<Update>> = new Telegraf(
-	process.env.BOT_TOKEN as string
-);
+const bot: Telegraf<Context<Update>> = new Telegraf(process.env.BOT_TOKEN as string);
 
 const rae = new RAE();
 const raeService: DefinitionService = new RaeApiDefinitionService(rae);
@@ -30,7 +25,7 @@ const showDefinitions = (context: any) => {
 				parse_mode: "HTML",
 			})
 		)
-		.catch(() => context.reply(errorMessage(chatMessage)));
+		.catch((error: NotDefinitionFoundError) => context.reply(error.message));
 };
 bot.on("text", showDefinitions);
 bot.launch();

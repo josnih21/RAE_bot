@@ -10,10 +10,7 @@ export class DefinitionEntity {
 	}
 
 	static from(definition: RaeApiDefinition) {
-		return new DefinitionEntity(
-			definition.getType(),
-			definition.getDefinition()
-		);
+		return new DefinitionEntity(definition.getType(), definition.getDefinition());
 	}
 
 	getType() {

@@ -1,9 +1,6 @@
 export class NotDefinitionFoundError extends Error {
-	constructor(message: string) {
-		super(message);
+	constructor(word: string) {
+		super(`No he encontrado una definición para ${word}`);
 		this.name = "NotDefinitionFoundError";
 	}
 }
-
-export const errorMessage = (word: String) =>
-	`No he encontrado una definición para ${word}`;

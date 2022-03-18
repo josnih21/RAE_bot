@@ -1,6 +1,6 @@
 import { RAE } from "rae-api";
 import { DefinitionEntity } from "./definition-entity";
-import { errorMessage, NotDefinitionFoundError } from "./errors";
+import { NotDefinitionFoundError } from "./errors";
 
 export interface DefinitionService {
 	findDefinitionsFor(word: string): Promise<DefinitionEntity[]>;
@@ -21,11 +21,9 @@ export class RaeApiDefinitionService implements DefinitionService {
 				return this.raeApi.fetchWord(wordId);
 			})
 			.then((response) => response.getDefinitions())
-			.then((wordDefinitions) =>
-				wordDefinitions.map((value) => DefinitionEntity.from(value))
-			)
+			.then((wordDefinitions) => wordDefinitions.map((value) => DefinitionEntity.from(value)))
 			.catch(() => {
-				throw new NotDefinitionFoundError(errorMessage(word));
+				throw new NotDefinitionFoundError(word);
 			});
 	}
 }

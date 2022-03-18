@@ -1,21 +1,15 @@
-import {
-	DefinitionService,
-	RaeApiDefinitionService,
-} from "../src/definition-service";
-import {RAE} from "rae-api";
-import {NotDefinitionFoundError} from "../src/errors";
-import {DefinitionEntity} from "../src/definition-entity";
+import { DefinitionService, RaeApiDefinitionService } from "../src/definition-service";
+import { RAE } from "rae-api";
+import { NotDefinitionFoundError } from "../src/errors";
+import { DefinitionEntity } from "../src/definition-entity";
 
 const raeApi = new RAE();
-const definitionService: DefinitionService = new RaeApiDefinitionService(
-	raeApi
-);
+const definitionService: DefinitionService = new RaeApiDefinitionService(raeApi);
 
 test("should throw an error when no definition found", () => {
 	const anUnreachableWord: string = "sdgdsgdsgdsgsdg";
 
-	const expectedResult = () =>
-		definitionService.findDefinitionsFor(anUnreachableWord);
+	const expectedResult = () => definitionService.findDefinitionsFor(anUnreachableWord);
 
 	expect(expectedResult).rejects.toThrow(NotDefinitionFoundError);
 });
@@ -31,11 +25,8 @@ test("should return a definition given a valid word", () => {
 			"interjección",
 			"poco us. U. para denotar extrañeza, placentera o desagradable. U. también repetida."
 		),
-		new DefinitionEntity(
-			"interjección",
-			"desus. Era u. para llamar a los inferiores."
-		),
+		new DefinitionEntity("interjección", "desus. Era u. para llamar a los inferiores."),
 	];
 
-	expect(definitions).resolves.toStrictEqual(expectedResult)
+	expect(definitions).resolves.toStrictEqual(expectedResult);
 });
