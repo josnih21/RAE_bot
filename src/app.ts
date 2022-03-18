@@ -1,10 +1,13 @@
-import 'dotenv/config'
-import {Context, Telegraf} from "telegraf";
-import {Update} from "typegram";
-import {RAE} from "rae-api";
-import {DefinitionService, RaeApiDefinitionService} from "./rae_service";
-import {errorMessage} from "./errors";
-import {manageDefinitionFormat} from "./DefinitionsFormatter";
+import "dotenv/config";
+import { Context, Telegraf } from "telegraf";
+import { Update } from "typegram";
+import { RAE } from "rae-api";
+import {
+	DefinitionService,
+	RaeApiDefinitionService,
+} from "./definition-service";
+import { errorMessage } from "./errors";
+import { manageDefinitionFormat } from "./definitions-formatter";
 
 const bot: Telegraf<Context<Update>> = new Telegraf(
 	process.env.BOT_TOKEN as string
@@ -19,11 +22,16 @@ bot.help((context) => {
 });
 
 const showDefinitions = (context: any) => {
-	let chatMessage = context.message.text
-	raeService.findDefinitionsFor(chatMessage)
-		.then((definitions) => context.reply(manageDefinitionFormat(definitions), {parse_mode: "HTML"}))
+	let chatMessage = context.message.text;
+	raeService
+		.findDefinitionsFor(chatMessage)
+		.then((definitions) =>
+			context.reply(manageDefinitionFormat(definitions), {
+				parse_mode: "HTML",
+			})
+		)
 		.catch(() => context.reply(errorMessage(chatMessage)));
-}
+};
 bot.on("text", showDefinitions);
 bot.launch();
 
