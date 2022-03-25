@@ -5,7 +5,9 @@
 		"start": "nodemon dist/app.js",
 		"lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
 		"format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
-		"test": "jest"
+		"test": "jest",
+		"test:coverage": "npm test -- --coverage",
+		"test:badges": "npm run test:coverage  && jest-coverage-badges"
 	},
 	"watch": {
 		"build": {
@@ -37,6 +39,7 @@
 	"dependencies": {
 		"conventional-changelog": "^3.1.25",
 		"dotenv": "^16.0.0",
+		"jest-coverage-badges": "^1.1.2",
 		"nodemon": "^2.0.15",
 		"npm-watch": "^0.11.0",
 		"rae-api": "^1.5.0",
