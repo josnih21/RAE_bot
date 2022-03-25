@@ -14,6 +14,14 @@ test("should throw an error when no definition found", async () => {
 	await expect(expectedResult).rejects.toThrow(NotDefinitionFoundError);
 });
 
+test("should throw an error when there are no matches for a given word", async () => {
+	const aWordWithoutMatches = "ioerjslfkwer";
+
+	const expectedResult = () => definitionService.getFirstMatchingWord(aWordWithoutMatches);
+
+	await expect(expectedResult).rejects.toThrow(NotMatchingWordFoundError);
+});
+
 test("should return a definition given a valid word", async () => {
 	const aWord = "hola";
 
