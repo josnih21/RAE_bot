@@ -4,7 +4,7 @@ import { Update } from "typegram";
 import { RAE } from "rae-api";
 import { DefinitionService, RaeApiDefinitionService } from "./definition-service";
 import { format } from "./definitions-formatter";
-import { NotDefinitionFoundError } from "./errors";
+import { NotDefinitionFoundError, NotMatchingWordFoundError } from "./errors";
 
 const bot: Telegraf<Context<Update>> = new Telegraf(process.env.BOT_TOKEN as string);
 
@@ -16,30 +16,34 @@ bot.help((context) => {
 	context.reply("Escribe una palabra para obtener su definición");
 });
 
-const showDefinitions = async (context: any, chatMessage: string) => {
-	const matchingWord = await raeService.getFirstMatchingWord(chatMessage);
-	const definitions = await raeService
-		.findDefinitionsFor(matchingWord.text)
-		.catch((error: NotDefinitionFoundError) => context.reply(error.message));
+const showDefinitions = (chatMessage: string) => {
+	const matchingWord = raeService.getFirstMatchingWord(chatMessage);
+	const definitions = matchingWord.then((firstMatchingWord) => raeService.findDefinitionsFor(firstMatchingWord.text));
 
-	return format(matchingWord, definitions);
+	return Promise.all([matchingWord, definitions]).then(([firstMatchingWord, definitions]) =>
+		format(firstMatchingWord, definitions)
+	);
 };
 
 bot.on("inline_query", async (context) => {
 	const chatMessage = context.update.inline_query.query;
 	if (chatMessage.length > 0) {
-		const [headerMessage, formattedDefinitions] = await showDefinitions(context, chatMessage);
-		return context.answerInlineQuery([
-			{
-				type: "article",
-				id: context.update.inline_query.id,
-				title: headerMessage,
-				input_message_content: {
-					message_text: formattedDefinitions,
-					parse_mode: "HTML",
-				},
-			},
-		]);
+		showDefinitions(chatMessage)
+			.then(([headerMessage, formattedDefinitions]) =>
+				context.answerInlineQuery([
+					{
+						type: "article",
+						id: context.update.inline_query.id,
+						title: headerMessage,
+						input_message_content: {
+							message_text: formattedDefinitions,
+							parse_mode: "HTML",
+						},
+					},
+				])
+			)
+			.catch((error: NotMatchingWordFoundError) => console.log(error.message))
+			.catch((error: NotDefinitionFoundError) => console.log(error.message));
 	}
 });
 
