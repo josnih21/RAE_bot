@@ -1,11 +1,11 @@
-import {RAE} from "rae-api";
-import {DefinitionEntity} from "./definition-entity";
-import {NotDefinitionFoundError} from "./errors";
-import {WordEntity} from "./word-entity";
+import { RAE } from "rae-api";
+import { DefinitionEntity } from "./definition-entity";
+import { NotDefinitionFoundError } from "./errors";
+import { WordEntity } from "./word-entity";
 
 export interface DefinitionService {
-	findDefinitionsFor(word: string): Promise<DefinitionEntity[]>
-	getFirstMatchingWord(word: string): Promise<WordEntity>
+	findDefinitionsFor(word: string): Promise<DefinitionEntity[]>;
+	getFirstMatchingWord(word: string): Promise<WordEntity>;
 }
 
 export class RaeApiDefinitionService implements DefinitionService {
@@ -20,10 +20,9 @@ export class RaeApiDefinitionService implements DefinitionService {
 		return this.raeApi.searchWord(word).then((matchingWords) => {
 			const id = matchingWords.getRes()[0].getId();
 			const matchedWord = matchingWords.getRes()[0].getHeader();
-			return new WordEntity(matchedWord, id)
-		})
+			return new WordEntity(matchedWord, id);
+		});
 	}
-
 
 	findDefinitionsFor(word: string) {
 		return this.getFirstMatchingWord(word)
@@ -37,4 +36,3 @@ export class RaeApiDefinitionService implements DefinitionService {
 			});
 	}
 }
-
