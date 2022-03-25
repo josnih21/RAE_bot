@@ -6,16 +6,16 @@ import { DefinitionEntity } from "../definition-entity";
 const raeApi = new RAE();
 const definitionService: DefinitionService = new RaeApiDefinitionService(raeApi);
 
-test("should throw an error when no definition found", () => {
-	const anUnreachableWord: string = "sdgdsgdsgdsgsdg";
+test("should throw an error when no definition found", async () => {
+	const anUnreachableWord = "sdgdsgdsgdsgsdg";
 
 	const expectedResult = () => definitionService.findDefinitionsFor(anUnreachableWord);
 
-	expect(expectedResult).rejects.toThrow(NotDefinitionFoundError);
+	await expect(expectedResult).rejects.toThrow(NotDefinitionFoundError);
 });
 
-test("should return a definition given a valid word", () => {
-	const aWord: string = "hola";
+test("should return a definition given a valid word", async () => {
+	const aWord = "hola";
 
 	const definitions = definitionService.findDefinitionsFor(aWord);
 
@@ -28,5 +28,5 @@ test("should return a definition given a valid word", () => {
 		new DefinitionEntity("interjección", "desus. Era u. para llamar a los inferiores."),
 	];
 
-	expect(definitions).resolves.toStrictEqual(expectedResult);
+	await expect(definitions).resolves.toStrictEqual(expectedResult);
 });
