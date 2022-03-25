@@ -1,7 +1,7 @@
-import { DefinitionService, RaeApiDefinitionService } from "../src/definition-service";
+import { DefinitionService, RaeApiDefinitionService } from "../definition-service";
 import { RAE } from "rae-api";
-import { NotDefinitionFoundError } from "../src/errors";
-import { DefinitionEntity } from "../src/definition-entity";
+import { NotDefinitionFoundError } from "../errors";
+import { DefinitionEntity } from "../definition-entity";
 
 const raeApi = new RAE();
 const definitionService: DefinitionService = new RaeApiDefinitionService(raeApi);

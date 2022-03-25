@@ -16,17 +16,17 @@ bot.help((context) => {
 	context.reply("Escribe una palabra para obtener su definición");
 });
 
-const showDefinitions = (context: any) => {
+
+const showDefinitions = async (context: any) => {
 	let chatMessage = context.message.text;
-	const matchingWord = raeService.getFirstMatchingWord(chatMessage)
-	const definitions = raeService
-		.findDefinitionsFor(chatMessage)
+	const matchingWord = await raeService.getFirstMatchingWord(chatMessage)
+	const definitions = await raeService
+		.findDefinitionsFor(matchingWord.text)
 		.catch((error: NotDefinitionFoundError) => context.reply(error.message));
 
-	Promise.all([matchingWord, definitions])
-		.then(([matchingWord, definitions]) => context.reply(manageDefinitionFormat(matchingWord, definitions), {
-			parse_mode: "HTML",
-		}))
+	context.reply(manageDefinitionFormat(matchingWord, definitions), {
+		parse_mode: "HTML",
+	})
 };
 bot.on("text", showDefinitions);
 bot.launch();
