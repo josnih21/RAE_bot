@@ -1,6 +1,6 @@
 import { RAE } from "rae-api";
 import { DefinitionEntity } from "./definition-entity";
-import { NotDefinitionFoundError } from "./errors";
+import { NotDefinitionFoundError, NotMatchingWordFoundError } from "./errors";
 import { WordEntity } from "./word-entity";
 
 export interface DefinitionService {
@@ -17,11 +17,16 @@ export class RaeApiDefinitionService implements DefinitionService {
 
 	//TODO: This will be implemented to be able to fetch any of the possible matching words
 	getFirstMatchingWord(word: string) {
-		return this.raeApi.searchWord(word).then((matchingWords) => {
-			const id = matchingWords.getRes()[0].getId();
-			const matchedWord = matchingWords.getRes()[0].getHeader();
-			return new WordEntity(matchedWord, id);
-		});
+		return this.raeApi
+			.searchWord(word)
+			.then((matchingWords) => {
+				const id = matchingWords.getRes()[0].getId();
+				const matchedWord = matchingWords.getRes()[0].getHeader();
+				return new WordEntity(matchedWord, id);
+			})
+			.catch(() => {
+				throw new NotMatchingWordFoundError(word);
+			});
 	}
 
 	findDefinitionsFor(word: string) {

@@ -1,6 +1,6 @@
 import { DefinitionService, RaeApiDefinitionService } from "../definition-service";
 import { RAE } from "rae-api";
-import { NotDefinitionFoundError } from "../errors";
+import { NotDefinitionFoundError, NotMatchingWordFoundError } from "../errors";
 import { DefinitionEntity } from "../definition-entity";
 
 const raeApi = new RAE();
