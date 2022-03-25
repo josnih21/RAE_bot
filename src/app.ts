@@ -3,7 +3,7 @@ import {Context, Telegraf} from "telegraf";
 import {Update} from "typegram";
 import {RAE} from "rae-api";
 import {DefinitionService, RaeApiDefinitionService} from "./definition-service";
-import {manageDefinitionFormat} from "./definitions-formatter";
+import {format} from "./definitions-formatter";
 import {NotDefinitionFoundError} from "./errors";
 
 const bot: Telegraf<Context<Update>> = new Telegraf(process.env.BOT_TOKEN as string);
@@ -18,17 +18,27 @@ bot.help((context) => {
 
 
 const showDefinitions = async (context: any) => {
-	let chatMessage = context.message.text;
+	let chatMessage = context.update.inline_query.query;
 	const matchingWord = await raeService.getFirstMatchingWord(chatMessage)
 	const definitions = await raeService
 		.findDefinitionsFor(matchingWord.text)
 		.catch((error: NotDefinitionFoundError) => context.reply(error.message));
 
-	context.reply(manageDefinitionFormat(matchingWord, definitions), {
-		parse_mode: "HTML",
-	})
+	return format(matchingWord, definitions)
 };
-bot.on("text", showDefinitions);
+
+bot.on("inline_query",  async context => {
+	const [headerMessage, formattedDefinitions] = await showDefinitions(context)
+	return context.answerInlineQuery([{
+		type: "article",
+		id: context.update.inline_query.id,
+		title: headerMessage,
+		input_message_content: {
+			message_text: formattedDefinitions,
+			parse_mode: "HTML",
+		},
+	}])
+})
 bot.launch();
 
 process.once("SIGINT", () => bot.stop("SIGINT"));
