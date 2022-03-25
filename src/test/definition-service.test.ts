@@ -2,6 +2,7 @@ import { DefinitionService, RaeApiDefinitionService } from "../definition-servic
 import { RAE } from "rae-api";
 import { NotDefinitionFoundError, NotMatchingWordFoundError } from "../errors";
 import { DefinitionEntity } from "../definition-entity";
+import {WordEntity} from "../word-entity";
 
 const raeApi = new RAE();
 const definitionService: DefinitionService = new RaeApiDefinitionService(raeApi);
@@ -21,6 +22,16 @@ test("should throw an error when there are no matches for a given word", async (
 
 	await expect(expectedResult).rejects.toThrow(NotMatchingWordFoundError);
 });
+
+test("should return a matching word given a valid word to search", async () => {
+	const aWord = "hola"
+
+	const matchingWord = definitionService.getFirstMatchingWord(aWord)
+
+	const expectedResult = new WordEntity("hola", "KYtLWBc")
+
+	await expect(matchingWord).resolves.toStrictEqual(expectedResult)
+})
 
 test("should return a definition given a valid word", async () => {
 	const aWord = "hola";
