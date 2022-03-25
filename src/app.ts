@@ -16,8 +16,7 @@ bot.help((context) => {
 	context.reply("Escribe una palabra para obtener su definición");
 });
 
-const showDefinitions = async (context: any) => {
-	let chatMessage = context.update.inline_query.query;
+const showDefinitions = async (context: any, chatMessage: string) => {
 	const matchingWord = await raeService.getFirstMatchingWord(chatMessage);
 	const definitions = await raeService
 		.findDefinitionsFor(matchingWord.text)
@@ -27,19 +26,23 @@ const showDefinitions = async (context: any) => {
 };
 
 bot.on("inline_query", async (context) => {
-	const [headerMessage, formattedDefinitions] = await showDefinitions(context);
-	return context.answerInlineQuery([
-		{
-			type: "article",
-			id: context.update.inline_query.id,
-			title: headerMessage,
-			input_message_content: {
-				message_text: formattedDefinitions,
-				parse_mode: "HTML",
+	const chatMessage = context.update.inline_query.query;
+	if (chatMessage.length > 0) {
+		const [headerMessage, formattedDefinitions] = await showDefinitions(context, chatMessage);
+		return context.answerInlineQuery([
+			{
+				type: "article",
+				id: context.update.inline_query.id,
+				title: headerMessage,
+				input_message_content: {
+					message_text: formattedDefinitions,
+					parse_mode: "HTML",
+				},
 			},
-		},
-	]);
+		]);
+	}
 });
+
 bot.launch();
 
 process.once("SIGINT", () => bot.stop("SIGINT"));
