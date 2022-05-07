@@ -9,7 +9,7 @@ test("should return a definition with the expected format", () => {
 	const formattedDefinitions = format(aWord, definitions);
 
 	const expectedResult = [
-		"<b>" + `Definiciones para la palabra: ${aWord.text}` + "</b>\n\n",
+		`Definiciones para la palabra: ${aWord.text}` + "\n\n",
 		"📚 <i>" + definitions[0].getType() + "</i>  <b>" + definitions[0].getDefinition() + "</b>",
 	];
 
