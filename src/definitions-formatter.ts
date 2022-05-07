@@ -2,7 +2,7 @@ import { DefinitionEntity } from "./definition-entity";
 import { WordEntity } from "./word-entity";
 
 export const format = (matchingWord: WordEntity, definitions: DefinitionEntity[]) => {
-	const headerMessage = "<b>" + `Definiciones para la palabra: ${matchingWord.text}` + "</b>\n\n";
+	const headerMessage = `Definiciones para la palabra: ${matchingWord.text}` + "\n\n";
 	const formattedDefinitions = definitions
 		.map(
 			(definition) =>
