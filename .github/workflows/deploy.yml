@@ -26,6 +26,5 @@ jobs:
               with:
                   heroku_api_key: ${{secrets.HEROKU_API_KEY}}
                   heroku_app_name: "rae-bot-telegram"
-                  args: git:remote -a rae-bot-telegram
-
+                  heroku_email: ${{secrets.HEROKU_EMAIL}}
 
