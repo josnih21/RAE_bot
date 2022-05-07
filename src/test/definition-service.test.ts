@@ -33,6 +33,16 @@ test("should return a matching word given a valid word to search", async () => {
 	await expect(matchingWord).resolves.toStrictEqual(expectedResult)
 })
 
+test("should return a list of matching words given a valid word to search", async () => {
+	const aWord = "hola"
+
+	const matchingWord = definitionService.getMatchingWords(aWord)
+
+	const expectedResult = [new WordEntity("hola", "KYtLWBc")]
+
+	await expect(matchingWord).resolves.toStrictEqual(expectedResult)
+})
+
 test("should return a definition given a valid word", async () => {
 	const aWord = "hola";
 

@@ -1,11 +1,12 @@
-import { RAE } from "rae-api";
-import { DefinitionEntity } from "./definition-entity";
-import { NotDefinitionFoundError, NotMatchingWordFoundError } from "./errors";
-import { WordEntity } from "./word-entity";
+import {RAE, Res} from "rae-api";
+import {DefinitionEntity} from "./definition-entity";
+import {NotDefinitionFoundError, NotMatchingWordFoundError} from "./errors";
+import {WordEntity} from "./word-entity";
 
 export interface DefinitionService {
-	findDefinitionsFor(word: string): Promise<DefinitionEntity[]>;
-	getFirstMatchingWord(word: string): Promise<WordEntity>;
+	findDefinitionsFor(word: string): Promise<DefinitionEntity[]>
+	getFirstMatchingWord(word: string): Promise<WordEntity>
+	getMatchingWords(word: string): Promise<WordEntity[]>
 }
 
 export class RaeApiDefinitionService implements DefinitionService {
@@ -15,18 +16,29 @@ export class RaeApiDefinitionService implements DefinitionService {
 		this.raeApi = raeApi;
 	}
 
-	//TODO: This will be implemented to be able to fetch any of the possible matching words
 	getFirstMatchingWord(word: string) {
 		return this.raeApi
 			.searchWord(word)
-			.then((matchingWords) => {
-				const id = matchingWords.getRes()[0].getId();
-				const matchedWord = matchingWords.getRes()[0].getHeader();
+			.then((matchingWordsResponse) => {
+				const matchedWord = matchingWordsResponse.getRes()[0].getHeader();
+				const id = matchingWordsResponse.getRes()[0].getId();
 				return new WordEntity(matchedWord, id);
 			})
 			.catch(() => {
 				throw new NotMatchingWordFoundError(word);
 			});
+	}
+
+	getMatchingWords(word: string) {
+		return this.raeApi
+			.searchWord(word)
+			.then((matchingWordsResponse) => {
+				let matchingWords: Res[] = matchingWordsResponse.getRes();
+				return matchingWords.map((word) => new WordEntity(word.getHeader(), word.getId()));
+			})
+			.catch(() => {
+				throw new NotDefinitionFoundError(word);
+			})
 	}
 
 	findDefinitionsFor(word: string) {
