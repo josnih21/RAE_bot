@@ -7,7 +7,8 @@
 		"format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
 		"test": "jest",
 		"test:coverage": "npm test -- --coverage",
-		"test:badges": "npm run test:coverage  && jest-coverage-badges"
+		"test:badges": "npm run test:coverage  && jest-coverage-badges",
+		"version": "conventional-changelog -i CHANGELOG.md -s && git add CHANGELOG.md"
 	},
 	"watch": {
 		"build": {
@@ -18,7 +19,7 @@
 		}
 	},
 	"name": "rae-bot",
-	"version": "0.0.1",
+	"version": "1.0.0",
 	"description": "Telegram bot that display word meanings based on dictionary of \"Real Academia de la lengua española\"",
 	"author": "josnih",
 	"license": "ISC",
